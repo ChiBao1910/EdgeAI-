@@ -1,13 +1,4 @@
-/*
- * esp32Folder.ino -- Voice Node (ESP32-S3 N16R8).
- * Thu am qua I2S INMP441, truyen HTTP toi AI Server va phat dap thoai qua I2S MAX98357A.
- * Ket noi Blynk Cloud dong bo dieu khien (V1: Ghi am, V4: Trang thai, V6: Huy thao tac).
- */
-
-
-// config.h phai duoc include DAU TIEN (chua Template ID, Name, Auth Token)
 #include "config.h"
-
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
@@ -15,9 +6,6 @@
 #include <math.h>
 #include <time.h>
 
-// ---------------------------------------------------------------------------
-// Dinh nghia trang thai he thong
-// ---------------------------------------------------------------------------
 enum SystemState {
   ST_BOOTING,
   ST_IDLE,
@@ -31,12 +19,8 @@ static volatile SystemState currentState = ST_BOOTING;
 static volatile bool recordRequested = false;
 static volatile bool cancelRequested = false;
 
-// Buffer ghi am (16-bit PCM, 5 giay @ 16kHz ~ 80,000 mau ~ 160KB)
 int16_t audioBuffer[SAMPLE_COUNT];
 
-// ---------------------------------------------------------------------------
-// Helper: Lay thoi gian thuc [HH:MM:SS] (NTP sync hoac fallback uptime)
-// ---------------------------------------------------------------------------
 String getTimeStr() {
   struct tm timeinfo;
   if (getLocalTime(&timeinfo, 50)) {
@@ -50,9 +34,6 @@ String getTimeStr() {
   return String(buf);
 }
 
-// ---------------------------------------------------------------------------
-// Helper: Gui trang thai len Blynk V4 va Serial voi mui ten ↓
-// ---------------------------------------------------------------------------
 void sendV4State(const String& stateName, const String& extra = "", bool showArrow = true) {
   String t = getTimeStr();
   String msg = t + stateName;
@@ -68,9 +49,6 @@ void sendV4State(const String& stateName, const String& extra = "", bool showArr
   Blynk.virtualWrite(VPIN_STATUS, msg);
 }
 
-// ---------------------------------------------------------------------------
-// Helper: Delay co goi Blynk.run() va thoat ngay neu cancelRequested
-// ---------------------------------------------------------------------------
 void blynkDelay(unsigned long ms) {
   unsigned long start = millis();
   while (millis() - start < ms) {
@@ -80,9 +58,6 @@ void blynkDelay(unsigned long ms) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Helper: Bat / Tat den LED bao trang thai
-// ---------------------------------------------------------------------------
 void ledOn() {
   digitalWrite(LED_PIN, HIGH);
 }
@@ -91,14 +66,11 @@ void ledOff() {
   digitalWrite(LED_PIN, LOW);
 }
 
-// ---------------------------------------------------------------------------
-// returnToIdle: Dua he thong ve IDLE, xoa sach co, san sang nhan lenh moi
-// ---------------------------------------------------------------------------
 void returnToIdle(const String& reason = "") {
   currentState    = ST_IDLE;
   recordRequested = false;
   cancelRequested = false;
-  ledOff(); // Tat den LED khi ve IDLE
+  ledOff();
 
   Blynk.virtualWrite(VPIN_START_STOP, 0);
   Blynk.virtualWrite(VPIN_EMERGENCY,  0);
@@ -110,9 +82,6 @@ void returnToIdle(const String& reason = "") {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Tu dong duy tri ket noi WiFi / Blynk
-// ---------------------------------------------------------------------------
 void ensureConnection() {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("[WiFi] Mat ket noi! Dang ket noi lai...");
@@ -127,12 +96,9 @@ void ensureConnection() {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Khuech dai am thanh PCM 16-bit stereo (to nhat co the, chong vo tieng)
-// ---------------------------------------------------------------------------
 void amplifyBuffer(uint8_t* buf, int len, float gain) {
   int16_t* samples = (int16_t*)buf;
-  int count = len / 2; // 2 byte per sample (16-bit)
+  int count = len / 2;
   for (int i = 0; i < count; i++) {
     int32_t val = (int32_t)(samples[i] * gain);
     if (val > 32767) val = 32767;
@@ -141,14 +107,10 @@ void amplifyBuffer(uint8_t* buf, int len, float gain) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// BLYNK_WRITE handlers
-// ---------------------------------------------------------------------------
-BLYNK_WRITE(VPIN_START_STOP) {  // V1: Ghi am
+BLYNK_WRITE(VPIN_START_STOP) {  
   int val = param.asInt();
   Serial.printf("[Blynk] Nhan V1 = %d (State=%d)\n", val, (int)currentState);
 
-  // CHI CHAP NHAN KHI DANG O IDLE (chong tu ghi luc boot/dang xu ly)
   if (val == 1) {
     if (currentState == ST_IDLE) {
       recordRequested = true;
@@ -160,7 +122,7 @@ BLYNK_WRITE(VPIN_START_STOP) {  // V1: Ghi am
   }
 }
 
-BLYNK_WRITE(VPIN_EMERGENCY) {   // V6: HUY THAO TAC & VE IDLE NGAY
+BLYNK_WRITE(VPIN_EMERGENCY) {   
   int val = param.asInt();
   Serial.printf("[Blynk] Nhan V6 = %d\n", val);
   if (val == 1) {
@@ -180,9 +142,6 @@ BLYNK_CONNECTED() {
   cancelRequested = false;
 }
 
-// ---------------------------------------------------------------------------
-// I2S Microphone setup (INMP441) - I2S_NUM_0
-// ---------------------------------------------------------------------------
 void setupMic() {
   i2s_config_t cfg = {
     .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX),
@@ -206,15 +165,12 @@ void setupMic() {
   Serial.println("[I2S] Mic khoi tao OK.");
 }
 
-// ---------------------------------------------------------------------------
-// I2S Speaker setup (MAX98357A) - I2S_NUM_1
-// ---------------------------------------------------------------------------
 void setupSpeaker() {
   i2s_config_t cfg = {
     .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX),
     .sample_rate = SAMPLE_RATE,
     .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
-    .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT, // MAX98357A nhan stereo frame
+    .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT, 
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = 0,
     .dma_buf_count = 8,
@@ -236,9 +192,6 @@ void setupSpeaker() {
   Serial.println("[I2S] Speaker khoi tao OK.");
 }
 
-// ---------------------------------------------------------------------------
-// Phat tieng beep ngan kiem tra loa MAX98357A luc khoi dong
-// ---------------------------------------------------------------------------
 void playTestBeep(int freq = 880, int durationMs = 250) {
   Serial.printf("[Loa] Phat tieng beep kiem tra (%dHz %dms)...\n", freq, durationMs);
   i2s_zero_dma_buffer(I2S_SPK_PORT);
@@ -260,9 +213,6 @@ void playTestBeep(int freq = 880, int durationMs = 250) {
   Serial.println("[Loa] Da phat xong beep kiem tra.");
 }
 
-// ---------------------------------------------------------------------------
-// Ghi am vao audioBuffer (co kiem tra V6 de ngat ngay va bat LED bao)
-// ---------------------------------------------------------------------------
 int recordAudio() {
   sendV4State("RECORDING");
   unsigned long tRecStart = millis();
@@ -306,9 +256,6 @@ int recordAudio() {
   return idx;
 }
 
-// ---------------------------------------------------------------------------
-// Tao WAV header 44 byte mono 16-bit
-// ---------------------------------------------------------------------------
 void writeWavHeader(uint8_t* h, uint32_t dataSize) {
   uint32_t fileSize = dataSize + 36, byteRate = SAMPLE_RATE * 2, sr = SAMPLE_RATE, sub1 = 16;
   uint16_t fmt = 1, ch = 1, align = 2, bits = 16;
@@ -318,18 +265,12 @@ void writeWavHeader(uint8_t* h, uint32_t dataSize) {
   memcpy(h+34, &bits, 2); memcpy(h+36, "data", 4); memcpy(h+40, &dataSize, 4);
 }
 
-// ---------------------------------------------------------------------------
-// Helper: So sanh khong phan biet hoa thuong
-// ---------------------------------------------------------------------------
 bool startsWithIgnoreCase(const String& s, const char* prefix) {
   String lower = s; lower.toLowerCase();
   String pLower = String(prefix); pLower.toLowerCase();
   return lower.startsWith(pLower);
 }
 
-// ---------------------------------------------------------------------------
-// Gui audio len AI Server va phat phan hoi qua loa
-// ---------------------------------------------------------------------------
 void sendAndPlay(int samples) {
   if (cancelRequested || samples == -1) {
     return;
@@ -579,9 +520,6 @@ void sendAndPlay(int samples) {
   Serial.printf(">>> Phat xong: %ld bytes am thanh (%.1fs).\n", totalPlayed, playSec);
 }
 
-// ---------------------------------------------------------------------------
-// setup()
-// ---------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200);
   delay(500);
@@ -635,9 +573,6 @@ void setup() {
   Serial.println("========================================\n");
 }
 
-// ---------------------------------------------------------------------------
-// loop()
-// ---------------------------------------------------------------------------
 void loop() {
   Blynk.run();
 
