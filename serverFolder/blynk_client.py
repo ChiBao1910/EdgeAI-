@@ -1,6 +1,3 @@
-"""
-blynk_client.py -- Dong bo du lieu len Blynk Cloud qua REST API (Thread-safe, Rate-limited).
-"""
 import threading
 import time
 import requests
@@ -11,7 +8,6 @@ _last_call = 0.0
 
 
 def update(pin: str, value) -> bool:
-    """Ghi gia tri len Blynk Virtual Pin qua REST API voi co che Rate Limiter va Lock dong bo."""
     global _last_call
     with _lock:
         wait = config.BLYNK_MIN_INTERVAL - (time.time() - _last_call)
@@ -19,7 +15,6 @@ def update(pin: str, value) -> bool:
             time.sleep(wait)
         try:
             pin_upper = pin.upper()
-            # Blynk Datastream gioi han do dai chuoi duoi 1024 ky tu
             if isinstance(value, str) and len(value) > 1000:
                 value = value[:997] + "..."
             resp = requests.get(
