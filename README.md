@@ -25,23 +25,23 @@ Dự án phát triển hệ thống trợ lý ảo cục bộ (Edge AI Assistant
             CACHE["Bộ nhớ đệm & Đồng bộ\nsensor_data.json"]
             STT --> LLM
             LLM --> TTS
+    
+        CLOUD["Blynk 2.0 Cloud & Mobile App"]
+            V1["V1: Nút kích hoạt ghi âm"]
+            V2["V2: Hiển thị Nhiệt độ"]
+            V3["V3: Hiển thị Áp suất"]
+            V4["V4: Terminal trạng thái Pipeline"]
+            V5["V5: Terminal lịch sử hội thoại"]
+            V6["V6: Nút hủy / Dừng khẩn cấp"]
 
-CLOUD["Blynk 2.0 Cloud & Mobile App"]
-V1["V1: Nút kích hoạt ghi âm"]
-V2["V2: Hiển thị Nhiệt độ"]
-V3["V3: Hiển thị Áp suất"]
-V4["V4: Terminal trạng thái Pipeline"]
-V5["V5: Terminal lịch sử hội thoại"]
-V6["V6: Nút hủy / Dừng khẩn cấp"]
-
-2. Luồng kết nối
+3. Luồng kết nối
    ESP8266 -->|HTTP POST /sensor-update| AI_SERVER
    ESP32 -->|HTTP POST /voice-query (WAV)| AI_SERVER
    AI_SERVER -->|HTTP 200 (WAV Response)| ESP32
    AI_SERVER -->|Cập nhật V2, V3, V4, V5| CLOUD
    CLOUD <-->|Đồng bộ V1, V4, V6 (Blynk Native)| ESP32
 
-3. Cấu trúc thư mục
+4. Cấu trúc thư mục
 
 ```
 DoAn/
