@@ -1,9 +1,9 @@
-Hệ thống Trợ lý ảo AI Cục bộ & Giám sát Môi trường (LEVA)
+# LEVA - Hệ thống Trợ lý ảo AI Cục bộ & Giám sát Môi trường
 
 Dự án phát triển hệ thống trợ lý ảo cục bộ (Edge AI Assistant) kết hợp trạm quan trắc môi trường IoT, bảo đảm quyền riêng tư, khả năng suy luận nhanh và hoạt động theo thời gian thực.
 
-1.  Sơ đồ kiến trúc hệ thống (System Architecture)
-    Hệ thống bao gồm 3 khối thành phần chính liên kết qua mạng cục bộ (LAN) và nền tảng đám mây Blynk IoT:
+## 1.  Sơ đồ kiến trúc hệ thống (System Architecture)
+###    Hệ thống bao gồm 3 khối thành phần chính liên kết qua mạng cục bộ (LAN) và nền tảng đám mây Blynk IoT:
 
         SENSOR_NODE["Weather Node (ESP8266)"]
             BMP280["Cảm biến BMP280\n(I2C: Nhiệt độ, Áp suất)"]
@@ -34,7 +34,7 @@ Dự án phát triển hệ thống trợ lý ảo cục bộ (Edge AI Assistant
             V5["V5: Terminal lịch sử hội thoại"]
             V6["V6: Nút hủy / Dừng khẩn cấp"]
 
-3. Luồng kết nối
+## 2. Luồng kết nối
 ```
    ESP8266 -->|HTTP POST /sensor-update| AI_SERVER
    ESP32 -->|HTTP POST /voice-query (WAV)| AI_SERVER
@@ -42,7 +42,7 @@ Dự án phát triển hệ thống trợ lý ảo cục bộ (Edge AI Assistant
    AI_SERVER -->|Cập nhật V2, V3, V4, V5| CLOUD
    CLOUD <-->|Đồng bộ V1, V4, V6 (Blynk Native)| ESP32
 ```
-5. Cấu trúc thư mục
+## 3. Cấu trúc thư mục
 
 ```
 DoAn/
@@ -60,9 +60,9 @@ DoAn/
 └── config.h Cấu hình WiFi, chu kỳ đo, Server Host
 ```
 
-4.  Yêu cầu công nghệ & Thư viện sử dụng
+## 4.  Yêu cầu công nghệ & Thư viện sử dụng
 
-    4.1. AI Server
+###    4.1. AI Server
 
 - Hệ điều hành: Windows 10/11, Linux hoặc macOS.
 - Python: Phiên bản 3.10 trở lên.
@@ -71,20 +71,20 @@ DoAn/
 - Thư viện Python (`requirements.txt`):
   `fastapi`, `uvicorn`, `faster-whisper`, `edge-tts`, `pydub`, `requests`.
 
-  4.2. Phần cứng Voice Node (ESP32-S3)
+###  4.2. Phần cứng Voice Node (ESP32-S3)
 
 - Vi điều khiển: ESP32-S3 Dev Module (khuyên dùng bản có PSRAM).
 - Cảm biến thu âm: INMP441 (chuẩn giao tiếp I2S).
 - Mạch khuếch đại phát âm: MAX98357A (chuẩn giao tiếp I2S) kèm loa 4Ω/3W.
 - Thư viện Arduino: `Blynk` (bởi Volodymyr Shymanskyy), `WiFi.h`, `driver/i2s.h`.
 
-  4.3. Phần cứng Weather Node (ESP8266)
+###  4.3. Phần cứng Weather Node (ESP8266)
 
 - Vi điều khiển: ESP8266 (NodeMCU / Wemos D1 Mini).
 - Cảm biến khí tượng: BMP280 (giao tiếp I2C địa chỉ `0x76` hoặc `0x77`).
 - Thư viện Arduino: `Adafruit BMP280 Library`, `Adafruit Unified Sensor`, `ESP8266HTTPClient`.
 
-5.  Các bước thực hiện để chạy đồ án
+## 5.  Các bước thực hiện để chạy đồ án
 
 Bước 1: Khởi động Ollama & chuẩn bị mô hình LLM
 
