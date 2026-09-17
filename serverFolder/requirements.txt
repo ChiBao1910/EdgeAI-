@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+requests
+faster-whisper
+edge-tts
+pydub
+audioop-lts
