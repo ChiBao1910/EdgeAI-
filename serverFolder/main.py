@@ -1,11 +1,3 @@
-"""
-main.py -- AI Server trung tam (FastAPI).
-Dieu phoi pipeline AI va dong bo du lieu he thong IoT:
-  - POST /voice-query   : Nhan WAV tu ESP32 -> STT -> LLM -> TTS -> Tra WAV audio
-  - POST /sensor-update : Nhan nhiet do/ap suat tu ESP8266 -> Cap nhat V2/V3
-  - POST /sensor-error  : Nhan canh bao loi cam bien -> Hien thi V4
-  - GET  /health        : Kiem tra trang thai server va du lieu cam bien gan nhat
-"""
 import asyncio
 import datetime
 import os
@@ -22,7 +14,6 @@ if hasattr(sys.stderr, "reconfigure"):
 from fastapi import FastAPI, Request
 from fastapi.responses import Response, JSONResponse
 import uvicorn
-
 import config
 import blynk_client
 import ai_pipeline
