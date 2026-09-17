@@ -1,8 +1,3 @@
-/*
- * esp8266Folder.ino -- Weather Node (ESP8266 + BMP280).
- * Doc du lieu nhiet do va ap suat qua I2C, truyen HTTP POST len AI Server dinh ky.
- */
-
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
@@ -16,8 +11,6 @@ bool bmpOk = false;
 unsigned long lastReadAt = 0;
 
 bool laySystemRunning() {
-  // Mac dinh tra ve true neu khong hoi duoc server, de mot su co mang
-  // tam thoi khong lam Weather Node ngung han viec do dac.
   if (WiFi.status() != WL_CONNECTED) return true;
   WiFiClient client;
   HTTPClient http;
