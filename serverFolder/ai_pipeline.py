@@ -1,19 +1,13 @@
-"""
-ai_pipeline.py -- Pipeline AI cuc bo: STT (Faster-Whisper) + LLM (Qwen2.5) + TTS (Edge-TTS).
-"""
 import os
 import datetime
 import io
 import math
 import struct
 import wave
-
 import requests
 import edge_tts
-
 from pydub import AudioSegment
 from faster_whisper import WhisperModel
-
 import config
 
 print(f"[ai_pipeline] Tai model Whisper ({config.WHISPER_MODEL_SIZE})...")
