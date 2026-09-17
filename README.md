@@ -103,18 +103,18 @@ ollama pull qwen2.5:1.5b-instruct
 ````
 
 2. Tạo môi trường ảo và cài đặt thư viện:
-   ```bash
-   python -m venv .venv
-    Windows:
-   .venv\Scripts\activate
-    Linux/macOS:
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
+```bash
+python -m venv .venv
+Windows:
+.venv\Scripts\activate
+Linux/macOS:
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 3. Chạy server FastAPI:
-   ```bash
-   python main.py
-   ```
+```bash
+python main.py
+```
 4. Kiểm tra địa chỉ IP LAN của máy chủ (ví dụ: `192.168.1.253`) bằng lệnh `ipconfig` (Windows) hoặc `ifconfig` (Linux/Mac).
 
 Bước 3: Nạp chương trình cho Weather Node (ESP8266)
