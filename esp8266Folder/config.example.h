@@ -5,7 +5,6 @@
  * HUONG DAN:
  *   1. Sao chep file nay thanh config.h (cung thu muc)
  *   2. Dien gia tri THUC TE vao cac o YOUR_...
- *   3. TUYET DOI khong commit config.h len Git (da co trong .gitignore)
  *
  * Node nay KHONG tu ket noi Blynk -- chi noi voi AI Server qua HTTP
  * thuan. Moi hien thi/dieu khien tren app Blynk deu do serverFolder
@@ -13,11 +12,11 @@
  * pin nao cho node nay).
  */
 
-// ==== WiFi ====
+//  WiFi 
 #define WIFI_SSID     "YOUR_WIFI_SSID"      // Ten mang WiFi
 #define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"  // Mat khau WiFi
 
-// ==== AI Server ====
+//  AI Server 
 // Doi thanh IP LAN THUC TE cua may dang chay serverFolder/main.py
 // Xem IP bang lenh: ipconfig (Windows) hoac ip addr (Linux/Mac)
 #define SERVER_HOST "YOUR_SERVER_LAN_IP"  // VD: "192.168.1.100"
@@ -26,6 +25,6 @@
 #define SENSOR_ERROR_PATH  "/sensor-error"
 #define SYSTEM_STATUS_PATH "/system-status"
 
-// ==== Chu ky do & gui du lieu ====
+//  Chu ky do & gui du lieu 
 // Khi TEST co the doi thanh 5000UL (5 giay) de thay ket qua nhanh.
 #define READ_INTERVAL_MS 300000UL   // 900000UL = 15 phut khi trien khai that

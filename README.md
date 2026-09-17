@@ -34,15 +34,16 @@ V4["V4: Terminal trạng thái Pipeline"]
 V5["V5: Terminal lịch sử hội thoại"]
 V6["V6: Nút hủy / Dừng khẩn cấp"]
 
-Luồng kết nối
-ESP8266 -->|HTTP POST /sensor-update| AI_SERVER
-ESP32 -->|HTTP POST /voice-query (WAV)| AI_SERVER
-AI_SERVER -->|HTTP 200 (WAV Response)| ESP32
-AI_SERVER -->|Cập nhật V2, V3, V4, V5| CLOUD
-CLOUD <-->|Đồng bộ V1, V4, V6 (Blynk Native)| ESP32
+2. Luồng kết nối
+   ESP8266 -->|HTTP POST /sensor-update| AI_SERVER
+   ESP32 -->|HTTP POST /voice-query (WAV)| AI_SERVER
+   AI_SERVER -->|HTTP 200 (WAV Response)| ESP32
+   AI_SERVER -->|Cập nhật V2, V3, V4, V5| CLOUD
+   CLOUD <-->|Đồng bộ V1, V4, V6 (Blynk Native)| ESP32
 
-3.  Cấu trúc thư mục
+3. Cấu trúc thư mục
 
+```
 DoAn/
 ├── serverFolder/ AI Server trung tâm (FastAPI, Whisper, Ollama, Edge-TTS)
 │ ├── main.py Entrypoint REST API và bộ điều phối
@@ -56,10 +57,11 @@ DoAn/
 └── esp8266Folder/ Weather Node phần cứng (ESP8266 + BMP280)
 ├── esp8266Folder.ino Firmware Arduino đọc cảm biến I2C & gửi HTTP
 └── config.h Cấu hình WiFi, chu kỳ đo, Server Host
+```
 
 4.  Yêu cầu công nghệ & Thư viện sử dụng
 
-4.1. AI Server
+    4.1. AI Server
 
 - Hệ điều hành: Windows 10/11, Linux hoặc macOS.
 - Python: Phiên bản 3.10 trở lên.
