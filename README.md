@@ -93,12 +93,11 @@ Mở terminal và đảm bảo dịch vụ Ollama đang hoạt động:
 ````bash
 ollama serve
 ollama pull qwen2.5:1.5b-instruct
-
-
- Bước 2: Cài đặt và khởi chạy Local AI Server
+````
+Bước 2: Cài đặt và khởi chạy Local AI Server
 
 1. Điều hướng vào thư mục server:
-   ```bash
+```bash
    cd serverFolder
 ````
 
